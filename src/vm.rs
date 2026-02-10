@@ -77,10 +77,40 @@ impl VM {
                 let arg1 = self.arena.read(self.pc.get()).unwrap();
                 self.pc.inc();
 
-                let poped = self.stack.pop().unwrap();
-
+                let poped = self.stack.pop().unwrap()[0];
+                if poped >= 32768 {
+                    // write to register
+                    self.registers.set(arg1 as usize - 32768, poped);
+                } else {
+                    self.arena.write(arg1 as usize, poped);
+                }
             }
-            04 => {}
+            04 => {
+                let a = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                let b = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                let c = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                if b == c {
+                    if a >= 32768 {
+                        // write to register
+                        self.registers.set(a as usize - 32768, 1);
+                    } else {
+                        self.arena.write(a as usize, 1);
+                    }
+                }else{
+                    if a >= 32768 {
+                        // write to register
+                        self.registers.set(a as usize - 32768, 0);
+                    } else {
+                        self.arena.write(a as usize, 0);
+                    }
+                }
+            }
             05 => {}
             06 => {
                 let arg1 = self.arena.read(self.pc.get()).unwrap();
@@ -126,4 +156,3 @@ fn u16_to_ascii(code: u16) -> Option<char> {
         None // not a valid ASCII character
     }
 }
-
