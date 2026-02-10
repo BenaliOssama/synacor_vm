@@ -1,0 +1,14 @@
+mod arena;
+
+use arena::Arena;
+
+
+
+fn main() {
+    
+    let mut arena = Arena::new();
+
+    println!("Hello, world!");
+}
+
+
