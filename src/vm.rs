@@ -102,7 +102,7 @@ impl VM {
                     } else {
                         self.arena.write(a as usize, 1);
                     }
-                }else{
+                } else {
                     if a >= 32768 {
                         // write to register
                         self.registers.set(a as usize - 32768, 0);
@@ -111,19 +111,146 @@ impl VM {
                     }
                 }
             }
-            05 => {}
+            05 => {
+                let a = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                let b = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                let c = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                if b > c {
+                    if a >= 32768 {
+                        // write to register
+                        self.registers.set(a as usize - 32768, 1);
+                    } else {
+                        self.arena.write(a as usize, 1);
+                    }
+                } else {
+                    if a >= 32768 {
+                        // write to register
+                        self.registers.set(a as usize - 32768, 0);
+                    } else {
+                        self.arena.write(a as usize, 0);
+                    }
+                }
+            }
             06 => {
                 let arg1 = self.arena.read(self.pc.get()).unwrap();
                 self.pc.inc();
                 self.pc.jump(arg1 as usize);
             }
-            07 => {}
-            08 => {}
-            09 => {}
-            10 => {}
-            11 => {}
-            12 => {}
-            13 => {}
+            07 => {
+                let a = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+                let b = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                if a != 0 {
+                    self.pc.jump(b as usize);
+                }
+            }
+            08 => {
+                let a = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+                let b = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                if a == 0 {
+                    self.pc.jump(b as usize);
+                }
+            }
+            09 => {
+                let a = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                let b = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                let c = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                if a >= 32768 {
+                    // write to register
+                    self.registers.set(a as usize - 32768, a + b);
+                } else {
+                    self.arena.write(a as usize, a + b);
+                }
+            }
+            10 => {
+
+                let a = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                let b = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                let c = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                if a >= 32768 {
+                    // write to register
+                    self.registers.set(a as usize - 32768, a * b);
+                } else {
+                    self.arena.write(a as usize, a * b );
+                }
+            }
+            11 => {
+
+                let a = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                let b = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                let c = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                if a >= 32768 {
+                    // write to register
+                    self.registers.set(a as usize - 32768, (a - b) % 32768 );
+                } else {
+                    self.arena.write(a as usize, a - b  );
+                }
+            }
+            12 => {
+
+                let a = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                let b = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                let c = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                if a >= 32768 {
+                    // write to register
+                    self.registers.set(a as usize - 32768, a & b );
+                } else {
+                    self.arena.write(a as usize, a ^ b  );
+                }
+            }
+            13 => {
+
+                let a = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                let b = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                let c = self.arena.read(self.pc.get()).unwrap();
+                self.pc.inc();
+
+                if a >= 32768 {
+                    // write to register
+                    self.registers.set(a as usize - 32768, a | b );
+                } else {
+                    self.arena.write(a as usize, a | b  );
+                }
+            }
             14 => {}
             15 => {}
             16 => {}
